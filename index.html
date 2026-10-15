@@ -3,16 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Gender-Affirming Surgery Post-Op Scheduler</title>
+<title>Surgical Post-Op Scheduling Planner</title>
 <style>
 :root{--ink:#17202a;--muted:#5c6b7a;--line:#dbe3ea;--bg:#f4f7fa;--card:#fff;--accent:#0f6f8f;--accent2:#0b5570;--warn:#b45309;--good:#166534}
 *{box-sizing:border-box}body{margin:0;font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg)}
 header{background:linear-gradient(135deg,#0f6f8f,#0b5570);color:#fff;padding:28px 20px}.wrap{max-width:1100px;margin:0 auto;padding:0 20px}
-h1{margin:0;font-size:26px}header p{margin:8px 0 0;opacity:.9;max-width:1020px}
+h1{margin:0;font-size:26px}header p{margin:8px 0 0;opacity:.9;max-width:900px}
 main{padding:24px 0 60px}.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:20px;box-shadow:0 1px 3px rgba(16,24,40,.06)}
-h2{margin:0 0 14px;font-size:18px}.grid{display:grid;gap:14px}@media(min-width:760px){.grid.four{grid-template-columns:repeat(4,1fr)}}
-label{display:block;font-weight:600;font-size:13px;margin-bottom:6px;color:#334}input,select{width:100%;padding:10px;border:1px solid #c9d4de;border-radius:9px;font:inherit;background:#fff}
-button{font:inherit;border:0;border-radius:9px;padding:10px 15px;cursor:pointer;font-weight:650}.btn-primary{background:var(--accent);color:#fff}.btn-primary:hover{background:var(--accent2)}
+h2{margin:0 0 14px;font-size:18px}.grid{display:grid;gap:14px}@media(min-width:760px){.grid.two{grid-template-columns:1fr 1fr}}
+label{display:block;font-weight:600;font-size:13px;margin-bottom:6px;color:#334}input,select{width:100%;padding:12px;border:1px solid #c9d4de;border-radius:9px;font:inherit;background:#fff}
+button{font:inherit;border:0;border-radius:9px;padding:12px 18px;cursor:pointer;font-weight:650}.btn-primary{background:var(--accent);color:#fff}.btn-primary:hover{background:var(--accent2)}
 .btn-ghost{background:#eef3f7;color:var(--ink)}.btn-danger{background:#fee2e2;color:#991b1b}
 .surgery{border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:14px;background:#fbfdff}
 .surgery-head{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}.surgery-head h3{margin:0;font-size:16px}
@@ -23,20 +23,18 @@ th{background:#f0f5f8;font-size:12px;text-transform:uppercase;letter-spacing:.04
 .soon{color:var(--warn);font-weight:700}.today{color:var(--good);font-weight:700}.past{color:#7c8794}
 .empty{text-align:center;color:var(--muted);padding:22px;border:1px dashed #c9d4de;border-radius:12px}.hint{color:var(--muted);font-size:13px;margin:6px 0 0}
 .callout{background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;padding:12px 14px;border-radius:10px;font-size:14px;margin-bottom:14px}
-.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
 @media print{header{background:#fff;color:#000;border-bottom:2px solid #000}.card,.surgery{box-shadow:none;break-inside:avoid}.no-print{display:none!important}body{background:#fff}}
 </style></head><body>
-<header><div class="wrap"><h1>Gender-Affirming Surgery Post-Op Scheduler</h1>
-<p>Enter the surgery and discharge dates. Vaginoplasty, Internal Revision/Depth Revision, Labiaplasty/External Revision, and Top Surgery use weekday-based protocols. Later non-Tuesday visits are interchangeable.</p></div></header>
+<header><div class="wrap"><h1>Surgical Post-Op Scheduling Planner</h1>
+<p>Choose a post-op schedule template and select the surgery date. The discharge date and follow-up appointments are calculated automatically.</p></div></header>
 <main class="wrap">
 <section class="card no-print"><h2>Add a surgery</h2>
-<div class="grid four">
-<div><label for="surgeryName">Surgery / procedure</label><input id="surgeryName" placeholder="e.g., Top Surgery"></div>
-<div><label for="surgeryDate">Surgery date</label><input id="surgeryDate" type="date"></div>
-<div><label for="dischargeDate">Discharge date</label><input id="dischargeDate" type="date"><p class="hint">Vaginoplasty and Internal Revision: surgery + 5 days. Labiaplasty/External Revision and Top Surgery: same day as surgery.</p></div>
-<div><label for="template">Post-op schedule template</label><select id="template"></select></div></div>
+<div class="grid two">
+<div><label for="template">Post-op schedule template</label><select id="template"></select></div>
+<div><label for="surgeryDate">Surgery date</label><input id="surgeryDate" type="date"></div></div>
 <div class="toolbar"><button class="btn-primary" id="addSurgery">Add surgery</button><button class="btn-ghost" id="clearAll">Clear all</button></div>
-<p class="hint">Top Surgery: Monday → first post-op Friday; Wednesday/Thursday → following Monday; Friday → following Wednesday. Then 2nd post-op is the following Wednesday, then weekly.</p></section>
+<p class="hint">Discharge is automatically set to surgery + 5 days for Vaginoplasty and Internal Revision, and the same day as surgery for Labiaplasty/External Revision and Top Surgery.</p></section>
 <section class="card"><h2>Scheduled surgeries</h2><div id="surgeryList"></div></section>
 <section class="card"><div class="surgery-head"><h2>Combined post-op calendar</h2><div class="no-print"><button class="btn-ghost" id="printBtn">Print / save PDF</button> <button class="btn-ghost" id="exportBtn">Export CSV</button></div></div>
 <div class="callout"><strong>Scheduling rules:</strong> The <strong>first post-op visit</strong> follows the surgery-specific rule. For Vaginoplasty and Internal Revision, the holiday adjustment applies only when the first post-op Monday falls on MLK Day, Presidents’ Day, Memorial Day, or Labor Day. For all later flexible visits, any appointment not specifically required on a Tuesday is interchangeable and may be scheduled on Monday, Wednesday, Thursday, or Friday; flexible visits default to Wednesday.</div>
@@ -62,7 +60,7 @@ const TEMPLATES={
 };
 let surgeries=[],uid=1;const $=id=>document.getElementById(id);
 ["Phalloplasty Stage 1","Phalloplasty Stage 2","Custom / blank"].forEach(k=>{const o=document.createElement("option");o.value=k;o.textContent=k;$("template").appendChild(o)});
-[["Vaginoplasty","Vaginoplasty — weekday-based schedule"],["Internal Revision / Depth Revision","Internal Revision / Depth Revision — Vaginoplasty schedule"],["Labiaplasty / External Revision","Labiaplasty / External Revision — weekday-based schedule"],["Top Surgery","Top Surgery — weekday-based schedule"]].forEach(([v,t])=>{const o=document.createElement("option");o.value=v;o.textContent=t;$("template").appendChild(o)});
+[["Vaginoplasty","Vaginoplasty"],["Internal Revision / Depth Revision","Internal Revision / Depth Revision"],["Labiaplasty / External Revision","Labiaplasty / External Revision"],["Top Surgery","Top Surgery"]].forEach(([v,t])=>{const o=document.createElement("option");o.value=v;o.textContent=t;$("template").appendChild(o)});
 function iso(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
 function parseD(s){return new Date(s+"T00:00:00")}
 function nthWeekday(y,m,wd,n){const d=new Date(y,m,1);let c=0;while(true){if(d.getDay()===wd){c++;if(c===n)return new Date(d)}d.setDate(d.getDate()+1)}}
@@ -78,6 +76,9 @@ function addMonths(d,n){const x=new Date(d);x.setMonth(x.getMonth()+n);return x}
 function nonTuesdayDefaultWednesday(d){if(d.getDay()===1)d.setDate(d.getDate()+1);return d}
 function toTuesday(d){while(d.getDay()!==2)d.setDate(d.getDate()+1);return d}
 const FLEX="Default Wednesday; any non-Tuesday day is interchangeable.";
+function dischargeFor(template,surgeryDateStr){const sd=parseD(surgeryDateStr);
+if(template==="Vaginoplasty"||template==="Internal Revision / Depth Revision")return plusDays(sd,5);
+return new Date(sd)}
 function vagSchedule(surgeryDateStr,dischargeDateStr){
 const surgery=parseD(surgeryDateStr),discharge=parseD(dischargeDateStr);
 const firstPostOpMonday=nextDow(discharge,1);
@@ -147,15 +148,8 @@ function addDays(ds,n){const d=parseD(ds);d.setDate(d.getDate()+Number(n));retur
 function fmt(d){return d.toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric",year:"numeric"})}
 function statusFor(d){const t=new Date();t.setHours(0,0,0,0);const n=Math.round((d-t)/86400000);if(n<0)return{label:"Past",cls:"past"};if(n===0)return{label:"Today",cls:"today"};if(n<=7)return{label:`In ${n} day${n===1?"":"s"}`,cls:"soon"};return{label:`In ${n} days`,cls:""}}
 function esc(v){return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]))}
-function updateDischarge(){
-const sd=$("surgeryDate").value,t=$("template").value;
-if(!sd)return;
-if(t==="Labiaplasty / External Revision"||t==="Top Surgery"){$("dischargeDate").value=sd;return}
-$("dischargeDate").value=iso(plusDays(parseD(sd),5))}
-$("surgeryDate").addEventListener("change",updateDischarge);
-$("template").addEventListener("change",updateDischarge);
 function render(){const list=$("surgeryList"),cal=$("calendar");list.innerHTML="";cal.innerHTML="";
-if(!surgeries.length){list.innerHTML='<div class="empty">No surgeries added yet.</div>';cal.innerHTML='<div class="empty">Your combined post-operative appointment calendar will appear here.</div>';return}
+if(!surgeries.length){list.innerHTML='<div class="empty">No surgeries added yet. Choose a template and surgery date above.</div>';cal.innerHTML='<div class="empty">Your combined post-operative appointment calendar will appear here.</div>';return}
 surgeries.forEach(s=>{const rows=s.appointments.map((a,i)=>`<div class="appointment">
 <div><label>${a.label?"Schedule rule":"Post-op day"}</label><input value="${esc(a.label||a.days)}" data-s="${s.id}" data-i="${i}" data-f="${a.label?"label":"days"}"${a.label?" readonly":""}></div>
 <div><label>Visit type</label><input value="${esc(a.type)}" data-s="${s.id}" data-i="${i}" data-f="type"></div>
@@ -168,14 +162,15 @@ all.sort((a,b)=>a.date-b.date);
 let h='<table><thead><tr><th>Date</th><th>Visit</th><th>Surgery</th><th>Type</th><th>Notes</th><th>Status</th></tr></thead><tbody>';
 all.forEach(a=>{const st=statusFor(a.date);h+=`<tr><td><strong>${fmt(a.date)}</strong></td><td>${esc(a.label)}</td><td>${esc(a.surgery)}</td><td>${esc(a.type)}</td><td>${esc(a.notes||"")}</td><td class="${st.cls}">${st.label}</td></tr>`});
 cal.innerHTML=h+"</tbody></table>"}
-$("addSurgery").addEventListener("click",()=>{const name=$("surgeryName").value.trim(),date=$("surgeryDate").value,discharge=$("dischargeDate").value,t=$("template").value;
-if(!name||!date||!discharge){alert("Please enter a surgery name, surgery date, and discharge date.");return}
+$("addSurgery").addEventListener("click",()=>{const t=$("template").value,date=$("surgeryDate").value;
+if(!date){alert("Please choose a surgery date.");return}
+const discharge=iso(dischargeFor(t,date));
 let appts;
 if(t==="Vaginoplasty"||t==="Internal Revision / Depth Revision")appts=vagSchedule(date,discharge);
 else if(t==="Labiaplasty / External Revision")appts=labiaSchedule(date);
 else if(t==="Top Surgery")appts=topSchedule(date);
 else appts=JSON.parse(JSON.stringify(TEMPLATES[t]));
-surgeries.push({id:uid++,name,date,discharge,appointments:appts});$("surgeryName").value="";$("surgeryDate").value="";$("dischargeDate").value="";render()});
+surgeries.push({id:uid++,name:t,date,discharge,appointments:appts});$("surgeryDate").value="";render()});
 $("surgeryList").addEventListener("input",e=>{const s=surgeries.find(x=>x.id===Number(e.target.dataset.s));if(!s)return;const i=Number(e.target.dataset.i),f=e.target.dataset.f;if(f==="label")return;s.appointments[i][f]=f==="days"?Number(e.target.value):e.target.value;if(f==="days")render()});
 $("surgeryList").addEventListener("click",e=>{const add=e.target.dataset.add,del=e.target.dataset.delete,rem=e.target.dataset.remove;
 if(add){surgeries.find(x=>x.id===Number(add)).appointments.push({days:30,type:"Office visit",notes:FLEX});render()}
