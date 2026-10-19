@@ -25,3 +25,53 @@ function validate(){let v=$('date').value,day=v?parse(v).getDay():null,msg=day==
 $('date').addEventListener('input',validate);$('date').addEventListener('change',validate);$('add').onclick=()=>{if(!validate())return;if(!$('date').value)return alert('Choose a surgery date.');try{cases.push(build($('template').value,$('date').value));render()}catch(e){alert(e.message)}};$('clear').onclick=()=>{if(confirm('Clear all schedules?')){cases.length=0;render()}};
 $('export').onclick=()=>{let rows=[['Surgery','Surgery date','Discharge date','Visit','Suggested in-person date','Other in-person dates','Optional telehealth','Scheduling note']];for(let p of cases)for(let r of p.rows)rows.push([p.name,p.sd,iso(p.discharge),r.label,iso(r.date),r.options.slice(1).map(iso).join('; '),r.virtual,r.note]);let csv=rows.map(r=>r.map(v=>'"'+String(v).replaceAll('"','""')+'"').join(',')).join('\r\n'),url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'})),a=document.createElement('a');a.href=url;a.download='post-op-schedules.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)};
 </script></html>
+<!-- Add this at the very end of your existing index.html. -->
+<script>
+(function () {
+  if (typeof render !== 'function' || typeof cases === 'undefined') return;
+  const originalRender = render;
+  function hideCombinedCalendar() {
+    const combined = document.getElementById('combined');
+    if (combined) {
+      const section = combined.closest('section');
+      if (section) section.hidden = true;
+    }
+  }
+  render = function () {
+    if (cases.length > 1) cases.splice(0, cases.length - 1);
+    originalRender();
+    hideCombinedCalendar();
+    const results = document.getElementById('results');
+    if (results && cases.length) {
+      const controls = document.createElement('div');
+      controls.className = 'controls';
+      controls.style.margin = '12px 0';
+      const printButton = document.createElement('button');
+      printButton.textContent = 'Print / save PDF';
+      printButton.onclick = function () { window.print(); };
+      const csvButton = document.createElement('button');
+      csvButton.textContent = 'Export CSV';
+      csvButton.style.marginLeft = '8px';
+      csvButton.onclick = function () {
+        const existing = document.getElementById('export');
+        if (existing) existing.click();
+      };
+      controls.append(printButton, csvButton);
+      const section = results.querySelector('section');
+      if (section) section.appendChild(controls);
+    }
+  };
+  const add = document.getElementById('add');
+  if (add) add.textContent = 'Show post-op schedule';
+  const clear = document.getElementById('clear');
+  if (clear) clear.textContent = 'Clear schedule';
+  const template = document.getElementById('template');
+  if (template && template.parentElement) {
+    const hint = document.createElement('p');
+    hint.className = 'hint';
+    hint.textContent = 'One surgery at a time. Showing a new schedule replaces the previous output.';
+    template.closest('section').appendChild(hint);
+  }
+  render();
+})();
+</script>
